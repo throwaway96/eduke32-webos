@@ -93,6 +93,10 @@ static SDL_GLContext sdl_context;
 static int vsync_unsupported;
 #endif
 
+#ifdef __WEBOS__
+static const char *webos_window = NULL;
+#endif
+
 static int32_t vsync_renderlayer;
 int32_t maxrefreshfreq=0;
 int32_t xres=-1, yres=-1, bpp=0, fullscreen=0, bytesperline;
@@ -1501,6 +1505,14 @@ static void destroy_window_resources()
     MicroProfileGpuShutdown();
 #endif
 
+#ifdef __WEBOS__
+    if (webos_window != NULL) {
+        VLOG_F(LOG_GFX, "Destorying webOS exported window '%s'.", webos_window);
+        SDL_webOSDestroyExportedWindow(webos_window);
+        webos_window = NULL;
+    }
+#endif
+
 #if SDL_MAJOR_VERSION >= 2
     if (g_ImGui_IO)
     {
@@ -1899,6 +1911,14 @@ int32_t videoSetMode(int32_t x, int32_t y, int32_t c, int32_t fs)
         if (!sdl_surface)
             SDL2_VIDEO_ERR("SDL_GetWindowSurface");
     }
+
+#ifdef __WEBOS__
+    if ((webos_window = SDL_webOSCreateExportedWindow(SDL_WEBOS_EXPORTED_TYPE_VIDEO)) == NULL) {
+        SDL2_VIDEO_ERR("SDL_webOSCreateExportedWindow");
+    }
+
+    VLOG_F(LOG_GFX, "Created webOS exported window '%s'.", webos_window);
+#endif
 
     setvideomode_sdlcommonpost(x, y, c, fs, regrab);
 

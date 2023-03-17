@@ -44,7 +44,7 @@ endif
 
 ifndef SUBPLATFORM
     SUBPLATFORM :=
-    ifeq ($(PLATFORM),$(filter $(PLATFORM),LINUX DINGOO GCW CAANOO))
+    ifeq ($(PLATFORM),$(filter $(PLATFORM),LINUX DINGOO GCW CAANOO WEBOS))
         SUBPLATFORM := LINUX
     endif
 endif
@@ -177,6 +177,10 @@ ifeq ($(PLATFORM),WII)
     CCFULLPATH = $(DEVKITPPC)/bin/$(CC)
 endif
 
+ifeq ($(PLATFORM),WEBOS)
+    CROSS := arm-webos-linux-gnueabi-
+endif
+
 CC := $(CROSS)gcc$(CROSS_SUFFIX)
 CXX := $(CROSS)g++$(CROSS_SUFFIX)
 
@@ -288,6 +292,8 @@ ifeq ($(PLATFORM),WINDOWS)
     endif
 else ifeq ($(PLATFORM),WII)
     IMPLICIT_ARCH := ppc
+else ifeq ($(PLATFORM),WEBOS)
+    IMPLICIT_ARCH := arm
 else
     ifneq ($(ARCH),)
         override ARCH := $(subst i486,i386,$(subst i586,i386,$(subst i686,i386,$(strip $(ARCH)))))
@@ -379,6 +385,10 @@ else ifeq ($(PLATFORM),WII)
     override HAVE_GTK2 := 0
     override HAVE_FLAC := 0
     SDL_TARGET := 1
+else ifeq ($(PLATFORM),WEBOS)
+    USE_OPENGL := 0
+    override HAVE_GTK2 := 0
+    SDL_TARGET := 2
 else ifeq ($(PLATFORM),$(filter $(PLATFORM),DINGOO GCW))
     override USE_OPENGL := 0
     override NOASM := 1
@@ -533,6 +543,11 @@ else ifeq ($(PLATFORM),$(filter $(PLATFORM),DINGOO GCW))
 else ifeq ($(SUBPLATFORM),LINUX)
     # Locate .so files
     LINKERFLAGS += -Wl,-rpath,'$$ORIGIN' -Wl,-z,origin
+
+    ifeq ($(PLATFORM),WEBOS)
+        COMPILERFLAGS += -D__WEBOS__ -D_LARGEFILE_SOURCE -D_LARGEFILE64_SOURCE -D_FILE_OFFSET_BITS=64
+        L_CXXONLYFLAGS += -static-libstdc++
+    endif
 endif
 ASFLAGS += -f $(ASFORMAT)
 
@@ -853,6 +868,8 @@ else ifeq ($(PLATFORM),BSD)
 else ifeq ($(PLATFORM),WII)
     COMPILERFLAGS += -I$(PORTLIBS)/include -Iplatform/Wii/include
     LIBDIRS += -L$(PORTLIBS)/lib -Lplatform/Wii/lib
+else ifeq ($(PLATFORM),WEBOS)
+    COMPILERFLAGS += -Iplatform/webos/include
 endif
 
 
@@ -891,6 +908,11 @@ ifeq ($(RENDERTYPE),SDL)
 
     ifeq ($(PLATFORM),WII)
         SDLCONFIG :=
+    endif
+
+    ifeq ($(PLATFORM),WEBOS)
+        SDLCONFIG :=
+        COMPILERFLAGS += -I'$$SYSROOT/usr/include/SDL2'
     endif
 
     ifneq ($(strip $(SDLCONFIG)),)

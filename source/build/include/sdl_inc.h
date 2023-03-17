@@ -27,6 +27,10 @@
 # endif
 #endif
 
+#if defined __WEBOS__
+# include "SDL_webos.h"
+#endif
+
 #if defined __MINGW64_VERSION_MAJOR_BACKUP && !defined __MINGW64__
 # define __MINGW64_VERSION_MAJOR __MINGW64_VERSION_MAJOR_BACKUP
 # undef __MINGW64_VERSION_MAJOR_BACKUP

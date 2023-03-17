@@ -552,6 +552,13 @@ endif
 
 ifeq ($(SUBPLATFORM),LINUX)
     LIBS += $(FLAC_LIBS) -lasound
+
+    ifeq ($(PLATFORM),WEBOS)
+	# libmali's dependencies are likely missing from the build environment
+        LIBS += -Wl,--push-state,--as-needed \
+	        -Wl,--unresolved-symbols=ignore-in-shared-libs -lmali \
+		-Wl,--pop-state
+    endif
 endif
 
 ifeq ($(PLATFORM),BSD)
