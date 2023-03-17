@@ -55,6 +55,7 @@ texturecache
 *.ipdb
 *.ilk
 .vs/
+.vscode/
 *.VC.db
 *.VC.opendb
 *.sym
