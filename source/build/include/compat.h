@@ -1503,6 +1503,10 @@ static inline void maybe_grow_buffer(char ** const buffer, int32_t * const buffe
 # define EDUKE32_GLES
 #endif
 
+#ifdef __WEBOS__
+# define EDUKE32_GLES
+#endif
+
 #if DEBUGGINGAIDS>=2
 # define DEBUG_MAIN_ARRAYS
 #endif
