@@ -544,16 +544,22 @@ duke3d_editor_miscdeps :=
 duke3d_game_orderonlydeps :=
 duke3d_editor_orderonlydeps :=
 
+ifneq (0,$(HAVE_FLAC))
+    FLAC_LIBS := -lFLAC
+else
+    FLAC_LIBS :=
+endif
+
 ifeq ($(SUBPLATFORM),LINUX)
-    LIBS += -lFLAC -lasound
+    LIBS += $(FLAC_LIBS) -lasound
 endif
 
 ifeq ($(PLATFORM),BSD)
-    LIBS += -lFLAC -lexecinfo
+    LIBS += $(FLAC_LIBS) -lexecinfo
 endif
 
 ifeq ($(PLATFORM),DARWIN)
-    LIBS += -lFLAC -lm \
+    LIBS += $(FLAC_LIBS) -lm \
             -Wl,-framework,Cocoa -Wl,-framework,Carbon -Wl,-framework,OpenGL \
             -Wl,-framework,CoreMIDI -Wl,-framework,AudioUnit \
             -Wl,-framework,AudioToolbox -Wl,-framework,IOKit -Wl,-framework,AGL
@@ -567,7 +573,7 @@ ifeq ($(PLATFORM),DARWIN)
 endif
 
 ifeq ($(PLATFORM),WINDOWS)
-    LIBS += -lFLAC -ldsound
+    LIBS += $(FLAC_LIBS) -ldsound
     duke3d_game_objs += winbits.cpp
     duke3d_game_rsrc_objs += gameres.rc
     duke3d_editor_rsrc_objs += buildres.rc
