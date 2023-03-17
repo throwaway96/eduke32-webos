@@ -109,6 +109,9 @@ static uint16_t sysgamma[3][256];
 #ifdef USE_OPENGL
 // OpenGL stuff
 char nogl=0;
+#else
+/* XXX: should find where this is used without USE_OPENGL */
+char nogl=1;
 #endif
 // last gamma, contrast
 static float lastvidgcb[2];
