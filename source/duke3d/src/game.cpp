@@ -6559,7 +6559,7 @@ static const char* dukeVerbosityCallback(loguru::Verbosity verbosity)
 
 int app_main(int argc, char const* const* argv)
 {
-    engineSetLogFile(APPBASENAME ".log", LOG_GAME_MAX);
+    engineSetLogFile(APPBASENAME ".log", LOG_DEBUG);
     engineSetLogVerbosityCallback(dukeVerbosityCallback);
 
 #ifndef NETCODE_DISABLE
