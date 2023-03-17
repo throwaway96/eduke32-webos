@@ -45,10 +45,12 @@ IMGUI_IMPL_API void     ImGui_ImplOpenGL3_DestroyDeviceObjects();
 #if defined(__APPLE__)
 #include <TargetConditionals.h>
 #endif
-#if (defined(__APPLE__) && (TARGET_OS_IOS || TARGET_OS_TV)) || (defined(__ANDROID__))
-#define IMGUI_IMPL_OPENGL_ES3               // iOS, Android  -> GL ES 3, "#version 300 es"
+#if (defined(__APPLE__) && (TARGET_OS_IOS || TARGET_OS_TV)) \
+ || (defined(__ANDROID__)) \
+ || (defined(__WEBOS__))
+#define IMGUI_IMPL_OPENGL_ES3               // iOS, Android, webOS  -> GL ES 3, "#version 300 es"
 #elif defined(__EMSCRIPTEN__)
-#define IMGUI_IMPL_OPENGL_ES2               // Emscripten    -> GL ES 2, "#version 100"
+#define IMGUI_IMPL_OPENGL_ES2               // Emscripten           -> GL ES 2, "#version 100"
 #else
 // Otherwise imgui_impl_opengl3_loader.h will be used.
 #endif
